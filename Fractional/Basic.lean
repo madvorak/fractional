@@ -42,7 +42,7 @@ notation:max f"⌞" => FOP₁.apply₁ f
 variable {f : FOP₂ α} in
 notation:max f"⌞" => FOP₂.apply₂ f
 
-/-- `f⌞ x y = (f y)⌞ x` -/
+/-- `f⌞ x y = ((f ·)⌞ y)⌞ x` -/
 theorem FOP₂.apply₂_eq_apply₁_apply₁ (f : FOP₂ α) (x y : Distr α) :
     f⌞ x y = (fun i : α => (f i)⌞ y)⌞ x := by
   ext
@@ -52,7 +52,7 @@ theorem FOP₂.apply₂_eq_apply₁_apply₁ (f : FOP₂ α) (x y : Distr α) :
   rw [NNRat.coe_inj, Finset.mul_sum]
   simp_rw [mul_assoc]
 
-/-- `↑(f a) = f⌞ ↑a`  -/
+/-- `f a = f⌞ ↑a`  -/
 theorem FOP₁.apply₁_coe [DecidableEq α] (f : FOP₁ α) (a : α) :
     f a = f⌞ a := by
   ext i
