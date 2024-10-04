@@ -1,9 +1,9 @@
 import Fractional.Basic
+import Mathlib.Data.Rat.BigOperators
+import Mathlib.Topology.MetricSpace.Defs
 
 
-variable {α : Type} [Fintype α]
-
-noncomputable instance : MetricSpace (Distr α) where
+noncomputable instance {α : Type} [Fintype α] : MetricSpace (Distr α) where
   dist x y :=
     (∑ i : α, |(x i).val - (y i).val|) / 2
   dist_self x := by

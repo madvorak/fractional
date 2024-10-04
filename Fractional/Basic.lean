@@ -1,4 +1,4 @@
-import Mathlib--.Algebra.BigOperators.Fin
+import Mathlib.Data.NNRat.BigOperators
 
 
 @[ext]
