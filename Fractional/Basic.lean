@@ -1,34 +1,39 @@
 import Mathlib.Data.NNRat.BigOperators
+import Mathlib.Data.NNReal.Basic
+
+open scoped NNReal
 
 
 @[ext]
 structure Distr (α : Type) [Fintype α] : Type where
-  theFun : α → ℚ≥0
+  theFun : α → ℝ≥0
   sumOne : Finset.univ.sum theFun = 1
 
+notation "𝍖 " => Distr
+
 abbrev FOP₁ (α : Type) [Fintype α] : Type :=
-  α → Distr α
+  α → 𝍖 α
 
 abbrev FOP₂ (α : Type) [Fintype α] : Type :=
-  α → α → Distr α
+  α → α → 𝍖 α
 
 
 variable {α : Type} [Fintype α]
 
-instance : CoeFun (Distr α) (fun _ => α → ℚ≥0) where
+instance : CoeFun (𝍖 α) (fun _ => α → ℝ≥0) where
   coe := Distr.theFun
 
-instance [DecidableEq α] : Coe α (Distr α) where
+instance [DecidableEq α] : Coe α (𝍖 α) where
   coe a := ⟨_, Fintype.sum_ite_eq a 1⟩
 
-abbrev FOP₁.apply₁ (f : FOP₁ α) (x : Distr α) : Distr α where
+abbrev FOP₁.apply₁ (f : FOP₁ α) (x : 𝍖 α) : 𝍖 α where
   theFun (a : α) := ∑ i : α, x i * f i a
   sumOne := by
     rw [Finset.sum_comm]
     conv => lhs; congr; rfl; ext; rw [←Finset.mul_sum, Distr.sumOne, mul_one]
     rw [Distr.sumOne]
 
-abbrev FOP₂.apply₂ (f : FOP₂ α) (x y : Distr α) : Distr α where
+abbrev FOP₂.apply₂ (f : FOP₂ α) (x y : 𝍖 α) : 𝍖 α where
   theFun (a : α) := ∑ i : α, ∑ j : α, x i * y j * f i j a
   sumOne := by
     rw [Finset.sum_comm]
@@ -43,13 +48,13 @@ variable {f : FOP₂ α} in
 notation:max f"⌞" => FOP₂.apply₂ f
 
 /-- `f⌞ x y = ((f ·)⌞ y)⌞ x` -/
-theorem FOP₂.apply₂_eq_apply₁_apply₁ (f : FOP₂ α) (x y : Distr α) :
+theorem FOP₂.apply₂_eq_apply₁_apply₁ (f : FOP₂ α) (x y : 𝍖 α) :
     f⌞ x y = (fun i : α => (f i)⌞ y)⌞ x := by
   ext
-  simp only [FOP₂.apply₂, FOP₁.apply₁, NNRat.coe_inj]
+  simp only [FOP₂.apply₂, FOP₁.apply₁, NNReal.coe_inj]
   apply congr_arg
   ext
-  rw [NNRat.coe_inj, Finset.mul_sum]
+  rw [NNReal.coe_inj, Finset.mul_sum]
   simp_rw [mul_assoc]
 
 /-- `f a = f⌞ ↑a`  -/

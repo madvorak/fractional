@@ -3,7 +3,7 @@ import Mathlib.Data.Rat.BigOperators
 import Mathlib.Topology.MetricSpace.Defs
 
 
-noncomputable instance {α : Type} [Fintype α] : MetricSpace (Distr α) where
+noncomputable instance {α : Type} [Fintype α] : MetricSpace (𝍖 α) where
   dist x y :=
     (∑ i : α, |(x i).val - (y i).val|) / 2
   dist_self x := by
@@ -22,6 +22,6 @@ noncomputable instance {α : Type} [Fintype α] : MetricSpace (Distr α) where
     simp [dist] at hxy
     rw [Finset.sum_eq_zero_iff_of_nonneg (fun _ _ => abs_nonneg _)] at hxy
     ext i
-    specialize hxy i (Finset.mem_univ i)
-    rw [abs_eq_zero, sub_eq_zero] at hxy
-    simp_all
+    simpa [abs_eq_zero, sub_eq_zero] using hxy i (Finset.mem_univ i)
+
+infix:82 " 𝄩 " => dist
