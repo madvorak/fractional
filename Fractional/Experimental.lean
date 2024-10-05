@@ -20,6 +20,29 @@ lemma hard :
 axiom almost_commutative : ∀ x y : S, x ⬙ y 𝄩 y ⬙ x ≤ 0.1
 
 lemma almost_commutative_cor (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ 0.1 := by
+  rw [dist_le_iff]
+  show
+    ∑ s : S,
+      |(Distr.mk (∑ i, ∑ j, x i * y j * (i ⬙ j) ·) _ _ s) -
+       (Distr.mk (∑ j, ∑ i, y j * x i * (j ⬙ i) ·) _ _ s)| ≤
+    2 * 0.1
+  conv =>
+    lhs; congr; rfl; ext; congr; congr; rfl; congr; congr; ext; rw [Finset.sum_comm];
+    congr; rfl; ext; congr; rfl; ext; congr; rw [mul_comm]
+  show
+    ∑ s : S,
+      |(Distr.mk (∑ i, ∑ j, x i * y j * (i ⬙ j) ·) _ _ s) -
+       (Distr.mk (∑ i, ∑ j, x i * y j * (j ⬙ i) ·) _ _ s)| ≤
+    2 * 0.1
+  conv =>
+    lhs; congr; rfl; ext; congr; simp; rw [←Finset.sum_sub_distrib];
+    congr; rfl; ext; rw [←Finset.sum_sub_distrib];
+    congr; rfl; ext; rw [←mul_sub];
+  show
+    ∑ s : S,
+      |∑ i, ∑ j, x i * y j * ((i ⬙ j) s - (j ⬙ i) s)| ≤
+    2 * 0.1
+  -- TODO
   sorry
 
 lemma almost_commutative_corr (x y z : 𝍖 S) :
