@@ -9,7 +9,7 @@ axiom almost_commutative : ∀ x y : S, x ⬙ y 𝄩 y ⬙ x ≤ ε
 
 
 lemma almost_commutative_cor (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := by
-  rw [dist_le_iff]
+  rw [dist_le_real_iff]
   show
     ∑ s : S,
       |(Distr.mk (∑ i : S, ∑ j : S, x i * y j * (i ⬙ j) ·) _ _ s) -
@@ -96,14 +96,15 @@ lemma almost_commutative_cor (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := by
     conv => lhs; congr; rfl; ext; rw [←Finset.mul_sum, Distr.sumOne, mul_one]
     apply Distr.sumOne
 
-lemma almost_commutative_corr (x y z : 𝍖 S) :
+lemma almost_commutative_cor_left (x y z : 𝍖 S) :
     x ⬘ z 𝄩 y ⬘ z ≤ x 𝄩 y := by
-  sorry
+  rw [FOP₂.apply₂_eq_apply₁_apply₁, FOP₂.apply₂_eq_apply₁_apply₁]
+  apply FOP₁.apply₁_dist_apply₁_le
 
 example [DecidableEq S] (x y z : S) : (x ⬙ y) ⬘ z 𝄩 z ⬘ (y ⬙ x) ≤ 2 * ε :=
   calc x ⬙ y ⬘ z 𝄩 z ⬘ y ⬙ x
      ≤ x ⬙ y ⬘ z 𝄩 y ⬙ x ⬘ z + y ⬙ x ⬘ z 𝄩 z ⬘ y ⬙ x := dist_triangle ..
    _ ≤ x ⬙ y ⬘ z 𝄩 y ⬙ x ⬘ z + ε := add_le_add_left (almost_commutative_cor ..) _
-   _ ≤ x ⬙ y 𝄩 y ⬙ x + ε := add_le_add_right (almost_commutative_corr ..) _
+   _ ≤ x ⬙ y 𝄩 y ⬙ x + ε := add_le_add_right (almost_commutative_cor_left ..) _
    _ ≤ ε + ε := add_le_add_right (almost_commutative ..) _
    _ = 2 * ε := (two_mul ε).symm

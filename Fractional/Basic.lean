@@ -10,7 +10,7 @@ structure Distr (α : Type) [Fintype α] : Type where
   nonNeg : 0 ≤ theFun
   sumOne : Finset.univ.sum theFun = 1
 
-notation "𝍖 " => Distr
+notation "𝍖" => Distr
 
 abbrev FOP₁ (α : Type) [Fintype α] : Type :=
   α → 𝍖 α

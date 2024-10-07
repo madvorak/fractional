@@ -3,7 +3,9 @@ import Mathlib.Data.Rat.BigOperators
 import Mathlib.Topology.MetricSpace.Defs
 
 
-noncomputable instance {α : Type} [Fintype α] : MetricSpace (𝍖 α) where
+variable {α : Type} [Fintype α]
+
+noncomputable instance : MetricSpace (𝍖 α) where
   dist x y :=
     (∑ i : α, |x i - y i|) / 2
   dist_self x := by
@@ -26,15 +28,22 @@ noncomputable instance {α : Type} [Fintype α] : MetricSpace (𝍖 α) where
 
 infix:82 " 𝄩 " => dist
 
-lemma dist_mul_two {α : Type} [Fintype α] (x y : 𝍖 α) :
-    x 𝄩 y * 2 = ∑ i : α, |x i - y i| :=
+lemma dist_mul_two (x y : 𝍖 α) : x 𝄩 y * 2 = ∑ i : α, |x i - y i| :=
   div_mul_cancel₀ _ two_ne_zero
 
-lemma two_mul_dist {α : Type} [Fintype α] (x y : 𝍖 α) :
-    2 * x 𝄩 y = ∑ i : α, |x i - y i| :=
+lemma two_mul_dist (x y : 𝍖 α) : 2 * x 𝄩 y = ∑ i : α, |x i - y i| :=
   mul_comm 2 (x 𝄩 y) ▸ dist_mul_two x y
 
-lemma dist_le_iff {α : Type} [Fintype α] (x y : 𝍖 α) (ζ : ℝ) :
-    x 𝄩 y ≤ ζ ↔ ∑ i : α, |x i - y i| ≤ 2 * ζ := by
+lemma dist_le_real_iff (x y : 𝍖 α) (ζ : ℝ) : x 𝄩 y ≤ ζ ↔ ∑ i : α, |x i - y i| ≤ 2 * ζ := by
   rw [←two_mul_dist, mul_le_mul_left]
   exact zero_lt_two
+
+lemma dist_le_dist_iff (u v x y : 𝍖 α) : u 𝄩 v ≤ x 𝄩 y ↔ ∑ i : α, |u i - v i| ≤ ∑ i : α, |x i - y i| := by
+  rw [←two_mul_dist, ←two_mul_dist, mul_le_mul_left]
+  exact zero_lt_two
+
+theorem FOP₁.apply₁_dist_apply₁_le (f : FOP₁ α) (x y : 𝍖 α) : f⌞ x 𝄩 f⌞ y ≤ x 𝄩 y := by
+  rw [dist_le_dist_iff]
+  --apply Finset.sum_le_sum
+  --intro i _
+  sorry
