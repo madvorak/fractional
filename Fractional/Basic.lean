@@ -60,16 +60,6 @@ notation:max f"⌞" => FOP₁.app₁ f
 variable {f : FOP₂ α} in
 notation:max f"⌞" => FOP₂.app₂ f
 
-/-- `f⌞ x y = ((f ·)⌞ y)⌞ x` -/
-theorem FOP₂.app₂_eq_app₁_app₁ (f : FOP₂ α) (x y : 𝍖 α) :
-    f⌞ x y = (fun i : α => (f i)⌞ y)⌞ x := by
-  ext
-  simp only [FOP₂.app₂, FOP₁.app₁, NNReal.coe_inj]
-  apply congr_arg
-  ext
-  rw [Finset.mul_sum]
-  simp_rw [mul_assoc]
-
 /-- `f a = f⌞ ↑a`  -/
 theorem FOP₁.app₁_coe [DecidableEq α] (f : FOP₁ α) (a : α) :
     f a = f⌞ a := by
@@ -81,3 +71,25 @@ theorem FOP₂.app₂_coe [DecidableEq α] (f : FOP₂ α) (a b : α) :
     f a b = f⌞ a b := by
   ext i
   by_cases hf : f a b = i <;> simp [hf]
+
+/-- `f⌞ x y = ((f ·)⌞ y)⌞ x` -/
+theorem FOP₂.app₂_eq_app₁_app₁ (f : FOP₂ α) (x y : 𝍖 α) :
+    f⌞ x y = (fun i : α => (f i)⌞ y)⌞ x := by
+  ext
+  simp only [FOP₂.app₂, FOP₁.app₁, NNReal.coe_inj]
+  apply congr_arg
+  ext
+  rw [Finset.mul_sum]
+  simp_rw [mul_assoc]
+
+/-- `f.swap⌞ x y = f⌞ y x` -/
+theorem FOP₂.swap_app₂ (f : FOP₂ α) (x y : 𝍖 α) :
+    (Function.swap f)⌞ x y = f⌞ y x := by
+  ext
+  simp only [FOP₂.app₂, FOP₁.app₁, NNReal.coe_inj]
+  rw [Finset.sum_comm]
+  apply congr_arg
+  ext i
+  apply congr_arg
+  ext j
+  rw [mul_comm (x j) (y i)]
