@@ -83,7 +83,7 @@ theorem FOP₂.app₂_eq_app₁_app₁ (f : FOP₂ α) (x y : 𝍖 α) :
   simp_rw [mul_assoc]
 
 /-- `f.swap⌞ x y = f⌞ y x` -/
-theorem FOP₂.swap_app₂ (f : FOP₂ α) (x y : 𝍖 α) :
+lemma FOP₂.swap_app₂ (f : FOP₂ α) (x y : 𝍖 α) :
     (Function.swap f)⌞ x y = f⌞ y x := by
   ext
   simp only [FOP₂.app₂, FOP₁.app₁, NNReal.coe_inj]

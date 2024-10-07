@@ -200,16 +200,12 @@ theorem FOP₂.app₂_dist_app₂_le_dist_left (f : FOP₂ α) (x y z : 𝍖 α)
   rw [FOP₂.app₂_eq_app₁_app₁, FOP₂.app₂_eq_app₁_app₁]
   apply FOP₁.app₁_dist_app₁_le_dist
 
-theorem FOP₂.app₂_dist_app₂_le_dist_right_coe (f : FOP₂ α) (x y : 𝍖 α) (z : α) : (f z : FOP₁ α)⌞ x 𝄩 (f z : FOP₁ α)⌞ y ≤ x 𝄩 y := by
-  apply FOP₁.app₁_dist_app₁_le_dist
-
-theorem FOP₂.app₂_dist_app₂_le_dist_right_full (f : FOP₂ α) (x y z : 𝍖 α) : f⌞ z x 𝄩 f⌞ z y ≤ x 𝄩 y := by
+theorem FOP₂.app₂_dist_app₂_le_dist_right (f : FOP₂ α) (x y z : 𝍖 α) : f⌞ z x 𝄩 f⌞ z y ≤ x 𝄩 y := by
   convert_to (Function.swap f)⌞ x z 𝄩 (Function.swap f)⌞ y z ≤ x 𝄩 y using 2
   · apply FOP₂.swap_app₂
   · apply FOP₂.swap_app₂
   apply FOP₂.app₂_dist_app₂_le_dist_left
 
 theorem FOP₂.app₂_dist_app₂_le_dist_add_dist (f : FOP₂ α) (u v x y : 𝍖 α) : f⌞ u x 𝄩 f⌞ v y ≤ u 𝄩 v + x 𝄩 y :=
-  calc f⌞ u x 𝄩 f⌞ v y
-     ≤ f⌞ u x 𝄩 f⌞ v x + f⌞ v x 𝄩 f⌞ v y := dist_triangle ..
-   _ ≤ u 𝄩 v + x 𝄩 y := add_le_add (FOP₂.app₂_dist_app₂_le_dist_left ..) (FOP₂.app₂_dist_app₂_le_dist_right_full ..)
+  calc f⌞ u x 𝄩 f⌞ v y ≤ f⌞ u x 𝄩 f⌞ v x + f⌞ v x 𝄩 f⌞ v y := dist_triangle ..
+  _ ≤ u 𝄩 v + x 𝄩 y := add_le_add (FOP₂.app₂_dist_app₂_le_dist_left ..) (FOP₂.app₂_dist_app₂_le_dist_right ..)
