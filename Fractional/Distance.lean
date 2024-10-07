@@ -133,4 +133,17 @@ theorem FOP₁.app₁_dist_app₁_le_dist (f : FOP₁ α) (x y : 𝍖 α) : f⌞
   rw [hd']
   clear * -
   simp only [eq_max_sub_min]
+  show
+    ∑ a : α, (
+      max (∑ i : α, x i * f i a) (∑ i : α, y i * f i a) -
+      min (∑ i : α, x i * f i a) (∑ i : α, y i * f i a)) ≤
+    ∑ a : α, (
+      max (x a) (y a) -
+      min (x a) (y a))
+  rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib]
+  show
+    ∑ a : α, max (∑ i : α, x i * f i a) (∑ i : α, y i * f i a) -
+    ∑ a : α, min (∑ i : α, x i * f i a) (∑ i : α, y i * f i a) ≤
+    ∑ a : α, max (x a) (y a) -
+    ∑ a : α, min (x a) (y a)
   sorry
