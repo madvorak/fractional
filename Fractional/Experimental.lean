@@ -98,8 +98,8 @@ lemma almost_commutative_cor (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := by
 
 lemma almost_commutative_cor_left (x y z : 𝍖 S) :
     x ⬘ z 𝄩 y ⬘ z ≤ x 𝄩 y := by
-  rw [FOP₂.apply₂_eq_apply₁_apply₁, FOP₂.apply₂_eq_apply₁_apply₁]
-  apply FOP₁.apply₁_dist_apply₁_le
+  rw [FOP₂.app₂_eq_app₁_app₁, FOP₂.app₂_eq_app₁_app₁]
+  apply FOP₁.app₁_dist_app₁_le_dist
 
 example [DecidableEq S] (x y z : S) : (x ⬙ y) ⬘ z 𝄩 z ⬘ (y ⬙ x) ≤ 2 * ε :=
   calc x ⬙ y ⬘ z 𝄩 z ⬘ y ⬙ x
