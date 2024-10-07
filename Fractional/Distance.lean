@@ -81,7 +81,7 @@ private lemma ugly_sum' (x y : α → ℝ) :
   congr
   ext i
   by_cases hi : x i ≤ y i
-  · convert_to |0 - (y i - x i)| = (0 : ℝ) + (y i - x i) using 3
+  · convert_to |0 - (y i - x i)| = 0 + (y i - x i) using 3
     · simp [differDistr, hi]
     · simp [differDistr, hi]
       intro
@@ -91,7 +91,7 @@ private lemma ugly_sum' (x y : α → ℝ) :
       intro
       linarith
     rw [zero_add, zero_sub, abs_neg, abs_of_nonneg (sub_nonneg_of_le hi)]
-  · convert_to |(x i - y i) - 0| = (x i - y i) + (0 : ℝ) using 3
+  · convert_to |(x i - y i) - 0| = (x i - y i) + 0 using 3
     · simp [differDistr, hi]
     · simp [differDistr, hi]
       intro
@@ -112,6 +112,15 @@ private lemma ugly_sum (x y : α → ℝ) :
     (ugly_sum_ x y)
     (ugly_sum' x y)
 
+private lemma eq_max_sub_min (x y : α → ℝ) (i : α) :
+    differDistr x y i + differDistr y x i = max (x i) (y i) - min (x i) (y i) := by
+  simp [differDistr]
+  by_cases hi : x i ≤ y i
+  · simp [hi]
+    intro
+    linarith
+  · simp [hi, le_of_not_ge hi]
+
 theorem FOP₁.app₁_dist_app₁_le_dist (f : FOP₁ α) (x y : 𝍖 α) : f⌞ x 𝄩 f⌞ y ≤ x 𝄩 y := by
   rw [dist_le_dist_iff]
   have hx := add_common_differ x y
@@ -123,4 +132,5 @@ theorem FOP₁.app₁_dist_app₁_le_dist (f : FOP₁ α) (x y : 𝍖 α) : f⌞
   have hd' := hy' ▸ hx' ▸ ugly_sum (f⌞ x : α → ℝ) (f⌞ y : α → ℝ)
   rw [hd']
   clear * -
+  simp only [eq_max_sub_min]
   sorry
