@@ -121,6 +121,18 @@ private lemma eq_max_sub_min (x y : α → ℝ) (i : α) :
     linarith
   · simp [hi, le_of_not_ge hi]
 
+lemma Finset.max_sum_le (f g : α → ℝ) : max (∑ i : α, f i) (∑ i : α, g i) ≤ ∑ i : α, max (f i) (g i) := by
+  rw [max_le_iff]
+  constructor <;> apply Finset.sum_le_sum <;> intros
+  · apply le_max_left
+  · apply le_max_right
+
+lemma Finset.sum_min_le (f g : α → ℝ) : ∑ i : α, min (f i) (g i) ≤ min (∑ i : α, f i) (∑ i : α, g i) := by
+  rw [le_min_iff]
+  constructor <;> apply Finset.sum_le_sum <;> intros
+  · apply min_le_left
+  · apply min_le_right
+
 theorem FOP₁.app₁_dist_app₁_le_dist (f : FOP₁ α) (x y : 𝍖 α) : f⌞ x 𝄩 f⌞ y ≤ x 𝄩 y := by
   rw [dist_le_dist_iff]
   have hx := add_common_differ x y
@@ -132,18 +144,58 @@ theorem FOP₁.app₁_dist_app₁_le_dist (f : FOP₁ α) (x y : 𝍖 α) : f⌞
   have hd' := hy' ▸ hx' ▸ ugly_sum (f⌞ x : α → ℝ) (f⌞ y : α → ℝ)
   rw [hd']
   clear * -
-  simp only [eq_max_sub_min]
-  show
-    ∑ a : α, (
-      max (∑ i : α, x i * f i a) (∑ i : α, y i * f i a) -
-      min (∑ i : α, x i * f i a) (∑ i : α, y i * f i a)) ≤
-    ∑ a : α, (
-      max (x a) (y a) -
-      min (x a) (y a))
-  rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib]
+  simp only [eq_max_sub_min, Finset.sum_sub_distrib]
   show
     ∑ a : α, max (∑ i : α, x i * f i a) (∑ i : α, y i * f i a) -
     ∑ a : α, min (∑ i : α, x i * f i a) (∑ i : α, y i * f i a) ≤
-    ∑ a : α, max (x a) (y a) -
-    ∑ a : α, min (x a) (y a)
-  sorry
+    ∑ j : α, max (x j) (y j) -
+    ∑ j : α, min (x j) (y j)
+  have sidesL := by
+    calc ∑ a, max (∑ i, x i * f i a) (∑ i, y i * f i a)
+       ≤ ∑ a, ∑ i, max (x i * f i a) (y i * f i a) := ?_
+     _ = ∑ i, ∑ a, max (x i * f i a) (y i * f i a) := ?_
+     _ = ∑ i, ∑ a, max (x i) (y i) * f i a := ?_
+     _ = ∑ i, max (x i) (y i) * ∑ a, f i a := ?_
+     _ = ∑ j, max (x j) (y j) := ?_
+    · apply Finset.sum_le_sum
+      intros
+      apply Finset.max_sum_le
+    · apply Finset.sum_comm
+    · congr
+      ext
+      congr
+      ext
+      symm
+      apply max_mul_of_nonneg
+      apply Distr.nonNeg
+    · congr
+      ext
+      symm
+      apply Finset.mul_sum
+    · congr
+      ext i
+      rw [Distr.sumOne, mul_one]
+  have sidesR := by
+    calc ∑ j, min (x j) (y j)
+       = ∑ i, min (x i) (y i) * ∑ a, f i a := ?_
+     _ = ∑ i, ∑ a, min (x i) (y i) * f i a := ?_
+     _ = ∑ i, ∑ a, min (x i * f i a) (y i * f i a) := ?_
+     _ = ∑ a, ∑ i, min (x i * f i a) (y i * f i a) := ?_
+     _ ≤ ∑ a, min (∑ i, x i * f i a) (∑ i, y i * f i a) := ?_
+    · congr
+      ext i
+      rw [Distr.sumOne, mul_one]
+    · congr
+      ext
+      apply Finset.mul_sum
+    · congr
+      ext
+      congr
+      ext
+      apply min_mul_of_nonneg
+      apply Distr.nonNeg
+    · apply Finset.sum_comm
+    · apply Finset.sum_le_sum
+      intros
+      apply Finset.sum_min_le
+  linarith
