@@ -8,7 +8,7 @@ def ε : ℝ := 0.00000001
 axiom almost_commutative : ∀ x y : S, x ⬙ y 𝄩 y ⬙ x ≤ ε
 
 
-lemma almost_commutative_cor (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := by
+lemma almost_commutative_Distr (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := by
   rw [dist_le_real_iff]
   show
     ∑ s : S,
@@ -96,15 +96,14 @@ lemma almost_commutative_cor (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := by
     conv => lhs; congr; rfl; ext; rw [←Finset.mul_sum, Distr.sumOne, mul_one]
     apply Distr.sumOne
 
-lemma almost_commutative_cor_left (x y z : 𝍖 S) :
-    x ⬘ z 𝄩 y ⬘ z ≤ x 𝄩 y := by
-  rw [FOP₂.app₂_eq_app₁_app₁, FOP₂.app₂_eq_app₁_app₁]
-  apply FOP₁.app₁_dist_app₁_le_dist
-
-example [DecidableEq S] (x y z : S) : (x ⬙ y) ⬘ z 𝄩 z ⬘ (y ⬙ x) ≤ 2 * ε :=
-  calc x ⬙ y ⬘ z 𝄩 z ⬘ y ⬙ x
-     ≤ x ⬙ y ⬘ z 𝄩 y ⬙ x ⬘ z + y ⬙ x ⬘ z 𝄩 z ⬘ y ⬙ x := dist_triangle ..
-   _ ≤ x ⬙ y ⬘ z 𝄩 y ⬙ x ⬘ z + ε := add_le_add_left (almost_commutative_cor ..) _
-   _ ≤ x ⬙ y 𝄩 y ⬙ x + ε := add_le_add_right (almost_commutative_cor_left ..) _
-   _ ≤ ε + ε := add_le_add_right (almost_commutative ..) _
+theorem triple_backwards (x y z : 𝍖 S) : (x ⬘ y) ⬘ z 𝄩 z ⬘ (y ⬘ x) ≤ 2 * ε :=
+  calc (x ⬘ y) ⬘ z 𝄩 z ⬘ (y ⬘ x)
+     ≤ (x ⬘ y) ⬘ z 𝄩 (y ⬘ x) ⬘ z + (y ⬘ x) ⬘ z 𝄩 z ⬘ (y ⬘ x) := dist_triangle ..
+   _ ≤ (x ⬘ y) ⬘ z 𝄩 (y ⬘ x) ⬘ z + ε := add_le_add_left (almost_commutative_Distr ..) _
+   _ ≤ (x ⬘ y) 𝄩 (y ⬘ x) + ε := add_le_add_right (FOP₂.app₂_dist_app₂_le_dist_left ..) _
+   _ ≤ ε + ε := add_le_add_right (almost_commutative_Distr ..) _
    _ = 2 * ε := (two_mul ε).symm
+
+example [DecidableEq S] (x y z : S) : (x ⬙ y) ⬘ z 𝄩 z ⬘ (y ⬙ x) ≤ 2 * ε := by
+  rw [Fragma.op_eq, Fragma.op_eq]
+  apply triple_backwards
