@@ -5,7 +5,7 @@ import Mathlib.Topology.MetricSpace.Defs
 
 variable {α : Type} [Fintype α]
 
-noncomputable instance : MetricSpace (𝍖 α) where
+noncomputable instance distrMetricSpace : MetricSpace (𝍖 α) where
   dist x y :=
     (∑ i : α, |x i - y i|) / 2
   dist_self x := by

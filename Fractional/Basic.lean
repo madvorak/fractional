@@ -21,10 +21,10 @@ abbrev FOP₂ (α : Type) [Fintype α] : Type :=
 
 variable {α : Type} [Fintype α]
 
-instance : CoeFun (𝍖 α) (fun _ => α → ℝ) where
+instance coeDistr : CoeFun (𝍖 α) (fun _ => α → ℝ) where
   coe := Distr.theFun
 
-instance [DecidableEq α] : Coe α (𝍖 α) where
+instance toDistr [DecidableEq α] : Coe α (𝍖 α) where
   coe x := ⟨_, fun _ => by aesop, Fintype.sum_ite_eq x 1⟩
 
 abbrev FOP₁.app₁ (f : FOP₁ α) (x : 𝍖 α) : 𝍖 α where

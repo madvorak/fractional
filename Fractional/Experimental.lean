@@ -5,10 +5,10 @@ import Fractional.Distance
 variable {S : Type} [Fintype S] [Fragma S]
 
 def ε : ℝ := 0.00000001
-axiom almost_commutative : ∀ x y : S, x ⬙ y 𝄩 y ⬙ x ≤ ε
+axiom almostComm : ∀ x y : S, x ⬙ y 𝄩 y ⬙ x ≤ ε
 
 
-lemma almost_commutative_Distr (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := by
+lemma almostComm_distr (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := by
   rw [dist_le_real_iff]
   show
     ∑ s : S,
@@ -80,7 +80,7 @@ lemma almost_commutative_Distr (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := b
     apply mul_le_mul_of_nonneg_left
     swap; apply mul_nonneg <;> apply Distr.nonNeg
     apply mul_le_mul_of_nonneg_left _ zero_le_two
-    apply almost_commutative
+    apply almostComm
   · apply congr_arg
     ext
     apply congr_arg
@@ -100,26 +100,26 @@ lemma almost_commutative_Distr (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := b
 theorem triple_backwards (x y z : 𝍖 S) : (x ⬘ y) ⬘ z 𝄩 z ⬘ (y ⬘ x) ≤ 2 * ε :=
   calc (x ⬘ y) ⬘ z 𝄩 z ⬘ (y ⬘ x)
      ≤ (x ⬘ y) ⬘ z 𝄩 (y ⬘ x) ⬘ z + (y ⬘ x) ⬘ z 𝄩 z ⬘ (y ⬘ x) := dist_triangle ..
-   _ ≤ (x ⬘ y) ⬘ z 𝄩 (y ⬘ x) ⬘ z + ε := add_le_add_left (almost_commutative_Distr ..) _
+   _ ≤ (x ⬘ y) ⬘ z 𝄩 (y ⬘ x) ⬘ z + ε := add_le_add_left (almostComm_distr ..) _
    _ ≤ (x ⬘ y) 𝄩 (y ⬘ x) + ε := add_le_add_right (FOP₂.app₂_dist_app₂_le_dist_left ..) _
-   _ ≤ ε + ε := add_le_add_right (almost_commutative_Distr ..) _
+   _ ≤ ε + ε := add_le_add_right (almostComm_distr ..) _
    _ = 2 * ε := (two_mul ε).symm
 
-example [DecidableEq S] (x y z : S) : (x ⬙ y) ⬘ z 𝄩 z ⬘ (y ⬙ x) ≤ 2 * ε := by
-  rw [Fragma.op_eq, Fragma.op_eq]
+example [DecidableEq S] (x y z : S) : x ⬙ y ⬘ z 𝄩 z ⬘ y ⬙ x ≤ 2 * ε := by
+  rw [Fragma.op_eq_app₂, Fragma.op_eq_app₂]
   apply triple_backwards
 
 /--` (u ⬘ v) ⬘ (x ⬘ y) ≈ (x ⬘ y) ⬘ (u ⬘ v) ≈ (y ⬘ x) ⬘ (u ⬘ v) ≈ (y ⬘ x) ⬘ (v ⬘ u) `-/
 theorem quadruple_backwards (u v x y : 𝍖 S) : (u ⬘ v) ⬘ (x ⬘ y) 𝄩 (y ⬘ x) ⬘ (v ⬘ u) ≤ 3 * ε := by
   calc (u ⬘ v) ⬘ (x ⬘ y) 𝄩 (y ⬘ x) ⬘ (v ⬘ u)
      ≤ (u ⬘ v) ⬘ (x ⬘ y) 𝄩 (x ⬘ y) ⬘ (u ⬘ v) + (x ⬘ y) ⬘ (u ⬘ v) 𝄩 (y ⬘ x) ⬘ (v ⬘ u) := dist_triangle ..
-   _ ≤ ε + (x ⬘ y) ⬘ (u ⬘ v) 𝄩 (y ⬘ x) ⬘ (v ⬘ u) := add_le_add_right (almost_commutative_Distr ..) _
+   _ ≤ ε + (x ⬘ y) ⬘ (u ⬘ v) 𝄩 (y ⬘ x) ⬘ (v ⬘ u) := add_le_add_right (almostComm_distr ..) _
    _ ≤ ε + (ε + ε) := ?_
    _ = 3 * ε := by ring
   · apply add_le_add_left
     apply (Fragma.op.app₂_dist_app₂_le_dist_add_dist (x ⬘ y) (y ⬘ x) (u ⬘ v) (v ⬘ u)).trans
-    apply add_le_add <;> apply almost_commutative_Distr
+    apply add_le_add <;> apply almostComm_distr
 
-example [DecidableEq S] (u v x y : S) : (u ⬙ v) ⬘ (x ⬙ y) 𝄩 (y ⬙ x) ⬘ (v ⬙ u) ≤ 3 * ε := by
-  repeat rw [Fragma.op_eq]
+example [DecidableEq S] (u v x y : S) : u ⬙ v ⬘ x ⬙ y 𝄩 y ⬙ x ⬘ v ⬙ u ≤ 3 * ε := by
+  repeat rw [Fragma.op_eq_app₂]
   apply quadruple_backwards
