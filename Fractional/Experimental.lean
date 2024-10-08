@@ -96,6 +96,7 @@ lemma almost_commutative_Distr (x y : 𝍖 S) : x ⬘ y 𝄩 y ⬘ x ≤ ε := b
     conv => lhs; congr; rfl; ext; rw [←Finset.mul_sum, Distr.sumOne, mul_one]
     apply Distr.sumOne
 
+/--` (x ⬘ y) ⬘ z ≈ (y ⬘ x) ⬘ z ≈ z ⬘ (y ⬘ x) `-/
 theorem triple_backwards (x y z : 𝍖 S) : (x ⬘ y) ⬘ z 𝄩 z ⬘ (y ⬘ x) ≤ 2 * ε :=
   calc (x ⬘ y) ⬘ z 𝄩 z ⬘ (y ⬘ x)
      ≤ (x ⬘ y) ⬘ z 𝄩 (y ⬘ x) ⬘ z + (y ⬘ x) ⬘ z 𝄩 z ⬘ (y ⬘ x) := dist_triangle ..
@@ -108,6 +109,7 @@ example [DecidableEq S] (x y z : S) : (x ⬙ y) ⬘ z 𝄩 z ⬘ (y ⬙ x) ≤ 2
   rw [Fragma.op_eq, Fragma.op_eq]
   apply triple_backwards
 
+/--` (u ⬘ v) ⬘ (x ⬘ y) ≈ (x ⬘ y) ⬘ (u ⬘ v) ≈ (y ⬘ x) ⬘ (u ⬘ v) ≈ (y ⬘ x) ⬘ (v ⬘ u) `-/
 theorem quadruple_backwards (u v x y : 𝍖 S) : (u ⬘ v) ⬘ (x ⬘ y) 𝄩 (y ⬘ x) ⬘ (v ⬘ u) ≤ 3 * ε := by
   calc (u ⬘ v) ⬘ (x ⬘ y) 𝄩 (y ⬘ x) ⬘ (v ⬘ u)
      ≤ (u ⬘ v) ⬘ (x ⬘ y) 𝄩 (x ⬘ y) ⬘ (u ⬘ v) + (x ⬘ y) ⬘ (u ⬘ v) 𝄩 (y ⬘ x) ⬘ (v ⬘ u) := dist_triangle ..
