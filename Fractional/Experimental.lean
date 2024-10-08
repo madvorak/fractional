@@ -107,3 +107,17 @@ theorem triple_backwards (x y z : 𝍖 S) : (x ⬘ y) ⬘ z 𝄩 z ⬘ (y ⬘ x)
 example [DecidableEq S] (x y z : S) : (x ⬙ y) ⬘ z 𝄩 z ⬘ (y ⬙ x) ≤ 2 * ε := by
   rw [Fragma.op_eq, Fragma.op_eq]
   apply triple_backwards
+
+theorem quadruple_backwards (u v x y : 𝍖 S) : (u ⬘ v) ⬘ (x ⬘ y) 𝄩 (y ⬘ x) ⬘ (v ⬘ u) ≤ 3 * ε := by
+  calc (u ⬘ v) ⬘ (x ⬘ y) 𝄩 (y ⬘ x) ⬘ (v ⬘ u)
+     ≤ (u ⬘ v) ⬘ (x ⬘ y) 𝄩 (x ⬘ y) ⬘ (u ⬘ v) + (x ⬘ y) ⬘ (u ⬘ v) 𝄩 (y ⬘ x) ⬘ (v ⬘ u) := dist_triangle ..
+   _ ≤ ε + (x ⬘ y) ⬘ (u ⬘ v) 𝄩 (y ⬘ x) ⬘ (v ⬘ u) := add_le_add_right (almost_commutative_Distr ..) _
+   _ ≤ ε + (ε + ε) := ?_
+   _ = 3 * ε := by ring
+  · apply add_le_add_left
+    apply (Fragma.op.app₂_dist_app₂_le_dist_add_dist (x ⬘ y) (y ⬘ x) (u ⬘ v) (v ⬘ u)).trans
+    apply add_le_add <;> apply almost_commutative_Distr
+
+example [DecidableEq S] (u v x y : S) : (u ⬙ v) ⬘ (x ⬙ y) 𝄩 (y ⬙ x) ⬘ (v ⬙ u) ≤ 3 * ε := by
+  repeat rw [Fragma.op_eq]
+  apply quadruple_backwards
