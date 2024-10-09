@@ -21,14 +21,33 @@ abbrev FOP₂ (α : Type) [Fintype α] : Type :=
 
 variable {α : Type} [Fintype α]
 
-instance coeDistr : CoeFun (𝍖 α) (fun _ => α → ℝ) where
+instance Distr.asFun : CoeFun (𝍖 α) (fun _ => α → ℝ) where
   coe := Distr.theFun
 
 instance toDistr [DecidableEq α] : Coe α (𝍖 α) where
   coe x := ⟨_, fun _ => by aesop, Fintype.sum_ite_eq x 1⟩
 
+instance Function.toFOP₁ [DecidableEq α] : Coe (α → α) (FOP₁ α) where
+  coe f := (f ·)
+
+instance Function.toFOP₂ [DecidableEq α] : Coe (α → α → α) (FOP₂ α) where
+  coe f := (f ·)
+
+lemma Function.toFOP₁_apply_eq_apply_coe [DecidableEq α] (f : α → α) (a : α) :
+    (f : FOP₁ α) a = (f a : 𝍖 α) :=
+  rfl
+
+lemma Function.toFOP₂_apply_eq_apply_coe [DecidableEq α] (f : α → α → α) (a b : α) :
+    (f : FOP₂ α) a b = (f a b : 𝍖 α) :=
+  rfl
+
+lemma Function.toFOP₂_apply_eq_apply_toFOP₁ [DecidableEq α] (f : α → α → α) (a : α) :
+    (f : FOP₂ α) a = (f a : FOP₁ α) :=
+  rfl
+
 abbrev FOP₁.app₁ (f : FOP₁ α) (x : 𝍖 α) : 𝍖 α where
-  theFun (a : α) := ∑ i : α, x i * f i a
+  theFun (a : α) :=
+    ∑ i : α, x i * f i a
   nonNeg _ := by
     apply Finset.sum_nonneg
     intros
@@ -39,7 +58,8 @@ abbrev FOP₁.app₁ (f : FOP₁ α) (x : 𝍖 α) : 𝍖 α where
     rw [Distr.sumOne]
 
 abbrev FOP₂.app₂ (f : FOP₂ α) (x y : 𝍖 α) : 𝍖 α where
-  theFun (a : α) := ∑ i : α, ∑ j : α, x i * y j * f i j a
+  theFun (a : α) :=
+    ∑ i : α, ∑ j : α, x i * y j * f i j a
   nonNeg _ := by
     apply Finset.sum_nonneg
     intros
