@@ -29,7 +29,7 @@ Similarly a binary fractional operation `g : FOP₂ α` can be applied to argume
 ```
 or to distributions `x y : 𝍖 α` as follows (notation, definition):
 ```
-g⌞ x = (fun a : α => ∑ i : α, ∑ j : α, x i * y j * g i j a)
+g⌞ x y = (fun a : α => ∑ i : α, ∑ j : α, x i * y j * g i j a)
 ```
 
 If a type is equipped with a only one specified fractional binary operation, we call it `Fragma` (for FRactional mAGMA).
